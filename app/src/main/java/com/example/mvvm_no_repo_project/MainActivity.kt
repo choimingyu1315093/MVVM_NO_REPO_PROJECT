@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mvvm_no_repo_project.ui.theme.MVVM_NO_REPO_PROJECTTheme
 
-class MainActivity : ComponentActivity() {
+class MainActivity :  ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
