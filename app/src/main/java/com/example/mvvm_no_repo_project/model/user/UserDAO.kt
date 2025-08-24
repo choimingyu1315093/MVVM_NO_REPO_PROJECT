@@ -12,4 +12,7 @@ interface UserDAO {
 
     @Insert
     suspend fun insertAll(users: List<User>)
+
+    @Query("DELETE FROM users")
+    suspend fun clear()
 }

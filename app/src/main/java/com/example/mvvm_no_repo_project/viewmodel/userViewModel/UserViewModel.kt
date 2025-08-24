@@ -1,14 +1,71 @@
 package com.example.mvvm_no_repo_project.viewmodel.userViewModel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.mvvm_no_repo_project.model.common.ErrorHandler
 import com.example.mvvm_no_repo_project.model.local.AppDatabase
 import com.example.mvvm_no_repo_project.model.remote.ApiClient
+import com.example.mvvm_no_repo_project.model.user.User
 import com.example.mvvm_no_repo_project.model.user.UserApiService
 import com.example.mvvm_no_repo_project.model.user.UserMapper
+import com.example.mvvm_no_repo_project.ui.common.ResourceState
+import com.example.mvvm_no_repo_project.ui.common.UiEvent
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 
 class UserViewModel(application: Application): AndroidViewModel(application){
     private val dao = AppDatabase.getInstance(application).getUserDao()
     private val api = ApiClient.create(UserApiService::class.java)
     private val mapper = UserMapper()
+
+    //화면 상태(StateFlow)
+    private var _state = MutableStateFlow<ResourceState<List<User>>>(ResourceState.Loading)
+    val state: StateFlow<ResourceState<List<User>>> = _state
+
+    //일회성 이벤트(SharedFlow)
+    private var _event = MutableSharedFlow<UiEvent>(replay = 0, extraBufferCapacity = 1)
+    val event: SharedFlow<UiEvent> = _event.asSharedFlow()
+
+    init {
+        observeLocal()
+        refresh()
+    }
+
+    private fun observeLocal() = viewModelScope.launch {
+        dao.getAllFlow()
+            .onStart { _state.value = ResourceState.Loading }
+            .catch {
+                _state.value = ResourceState.Error(it.message ?: "Unknown Error")
+                _event.emit(UiEvent.Message("로켈 데이터 읽기 실패"))
+            }
+            .collectLatest { _state.value = ResourceState.Success(it) }
+    }
+
+    fun refresh() = viewModelScope.launch {
+        runCatching {
+            val dtos = api.getUsers()
+            val models = dtos.map(mapper::dtoToModel)
+            dao.clear()
+            dao.insertAll(models)
+        }.onSuccess {
+            _event.emit(UiEvent.RefreshComplete)
+        }.onFailure {
+            val msg = ErrorHandler.wrap(it).message ?: "Refresh failed"
+            _state.value = ResourceState.Error(msg)
+            _event.emit(UiEvent.Message(msg))
+        }
+    }
+
+    fun userClick(id: String) = viewModelScope.launch {
+        _event.emit(UiEvent.Navigate("user/detail/$id"))
+    }
 }
