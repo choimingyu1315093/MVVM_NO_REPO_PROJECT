@@ -1,7 +1,6 @@
 package com.example.mvvm_no_repo_project.viewmodel.userViewModel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mvvm_no_repo_project.model.common.ErrorHandler
@@ -50,7 +49,7 @@ class UserViewModel(application: Application): AndroidViewModel(application){
             .collectLatest { _state.value = ResourceState.Success(it) }
     }
 
-    fun refresh() = viewModelScope.launch {
+    private fun refresh() = viewModelScope.launch {
         runCatching {
             val dtos = api.getUsers()
             val models = dtos.map(mapper::dtoToModel)
@@ -65,7 +64,7 @@ class UserViewModel(application: Application): AndroidViewModel(application){
         }
     }
 
-    fun userClick(id: String) = viewModelScope.launch {
-        _event.emit(UiEvent.Navigate("user/detail/$id"))
+    fun userClick(name: String) = viewModelScope.launch {
+        _event.emit(UiEvent.Message("Hello, $name"))
     }
 }

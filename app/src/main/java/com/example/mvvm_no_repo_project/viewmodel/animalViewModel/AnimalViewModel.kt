@@ -62,7 +62,7 @@ class AnimalViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun onAnimalClick(id: String) = viewModelScope.launch {
-        _event.emit(UiEvent.Navigate("animal/detail/$id"))
+    fun animalClick(name: String) = viewModelScope.launch {
+        _event.emit(UiEvent.Message("Hello, $name"))
     }
 }
