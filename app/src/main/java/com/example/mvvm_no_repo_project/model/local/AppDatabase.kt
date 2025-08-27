@@ -1,7 +1,6 @@
 package com.example.mvvm_no_repo_project.model.local
 
 import android.content.Context
-import androidx.compose.ui.unit.Constraints
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase

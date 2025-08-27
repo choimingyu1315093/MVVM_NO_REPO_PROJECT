@@ -1,12 +1,11 @@
 package com.example.mvvm_no_repo_project.model.remote
 
 import com.example.mvvm_no_repo_project.utils.NetworkUtil
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiClient {
@@ -29,7 +28,7 @@ object ApiClient {
         Retrofit.Builder()
             .baseUrl(NetworkUtil.BASE_URL)
             .client(client)
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
