@@ -1,12 +1,12 @@
 package com.example.mvvm_no_repo_project.model.user
 
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 
 data class UserDto(
-    @SerialName("id")
+    @SerializedName("id")
     val id: Int? = null,
-    @SerialName("name")
+    @SerializedName("name")
     val name: String? = null,
-    @SerialName("email")
+    @SerializedName("email")
     val email: String? = null
 )

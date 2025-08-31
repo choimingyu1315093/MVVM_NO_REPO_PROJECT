@@ -16,6 +16,7 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun getAnimalDao(): AnimalDAO
 
     companion object {
+        //볼레틀
         @Volatile private var INSTANCE: AppDatabase? = null //@Volatile 여러 스레드에서 INSTANCE를 안전하게 읽을 수 있도록 보장함.
 
         fun getInstance(context: Context): AppDatabase =

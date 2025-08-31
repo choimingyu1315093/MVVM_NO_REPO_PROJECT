@@ -31,7 +31,7 @@ class UserViewModel(application: Application): AndroidViewModel(application){
     val state: StateFlow<ResourceState<List<User>>> = _state
 
     //일회성 이벤트(SharedFlow)
-    private var _event = MutableSharedFlow<UiEvent>(replay = 0, extraBufferCapacity = 1)
+    private var _event = MutableSharedFlow<UiEvent>(replay = 0, extraBufferCapacity = 1) //replay는 재방출 안함, extraBufferCapacity는 안전 버퍼
     val event: SharedFlow<UiEvent> = _event.asSharedFlow()
 
     init {
@@ -44,7 +44,7 @@ class UserViewModel(application: Application): AndroidViewModel(application){
             .onStart { _state.value = ResourceState.Loading }
             .catch {
                 _state.value = ResourceState.Error(it.message ?: "Unknown Error")
-                _event.emit(UiEvent.Message("로켈 데이터 읽기 실패"))
+                _event.emit(UiEvent.Message("로컬 데이터 읽기 실패"))
             }
             .collectLatest { _state.value = ResourceState.Success(it) }
     }
