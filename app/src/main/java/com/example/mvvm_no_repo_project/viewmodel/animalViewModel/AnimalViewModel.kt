@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.mvvm_no_repo_project.model.animal.Animal
 import com.example.mvvm_no_repo_project.model.animal.AnimalApiService
 import com.example.mvvm_no_repo_project.model.animal.AnimalMapper
+import com.example.mvvm_no_repo_project.model.animal.AnimalRepository
+import com.example.mvvm_no_repo_project.model.animal.AnimalRepositoryImpl
 import com.example.mvvm_no_repo_project.model.common.ErrorHandler
 import com.example.mvvm_no_repo_project.model.local.AppDatabase
 import com.example.mvvm_no_repo_project.model.remote.ApiClient
@@ -22,9 +24,12 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class AnimalViewModel(application: Application): AndroidViewModel(application) {
-    private val dao = AppDatabase.getInstance(application).getAnimalDao()
-    private val api = ApiClient.create(AnimalApiService::class.java)
-    private val mapper = AnimalMapper()
+    private val repo: AnimalRepository by lazy {
+        val dao = AppDatabase.getInstance(application).getAnimalDao()
+        val api = ApiClient.create(AnimalApiService::class.java)
+        val mapper = AnimalMapper()
+        AnimalRepositoryImpl(api, dao, mapper)
+    }
 
     private var _state = MutableStateFlow<ResourceState<List<Animal>>>(ResourceState.Loading)
     val state: StateFlow<ResourceState<List<Animal>>> = _state
@@ -38,7 +43,7 @@ class AnimalViewModel(application: Application): AndroidViewModel(application) {
     }
 
     private fun observeLocal() = viewModelScope.launch {
-        dao.getAllFlow()
+        repo.animals()
             .onStart { _state.value = ResourceState.Loading }
             .catch {
                 _state.value = ResourceState.Error(it.message ?: "Unknown Error")
@@ -49,10 +54,7 @@ class AnimalViewModel(application: Application): AndroidViewModel(application) {
 
     private fun refresh() = viewModelScope.launch {
         runCatching {
-            val dtos = api.getAnimals()
-            val models = dtos.map(mapper::dtoToModel)
-            dao.clear()
-            dao.insertAll(models)
+            repo.refresh()
         }.onSuccess {
             _event.emit(UiEvent.RefreshComplete)
         }.onFailure {

@@ -9,6 +9,8 @@ import com.example.mvvm_no_repo_project.model.remote.ApiClient
 import com.example.mvvm_no_repo_project.model.user.User
 import com.example.mvvm_no_repo_project.model.user.UserApiService
 import com.example.mvvm_no_repo_project.model.user.UserMapper
+import com.example.mvvm_no_repo_project.model.user.UserRepository
+import com.example.mvvm_no_repo_project.model.user.UserRepositoryImpl
 import com.example.mvvm_no_repo_project.ui.common.ResourceState
 import com.example.mvvm_no_repo_project.ui.common.UiEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,9 +24,12 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class UserViewModel(application: Application): AndroidViewModel(application){
-    private val dao = AppDatabase.getInstance(application).getUserDao()
-    private val api = ApiClient.create(UserApiService::class.java)
-    private val mapper = UserMapper()
+    private val repo: UserRepository by lazy {
+        val dao = AppDatabase.getInstance(application).getUserDao()
+        val api = ApiClient.create(UserApiService::class.java)
+        val mapper = UserMapper()
+        UserRepositoryImpl(dao, api, mapper)
+    }
 
     //화면 상태(StateFlow)
     private var _state = MutableStateFlow<ResourceState<List<User>>>(ResourceState.Loading)
@@ -40,7 +45,7 @@ class UserViewModel(application: Application): AndroidViewModel(application){
     }
 
     private fun observeLocal() = viewModelScope.launch {
-        dao.getAllFlow()
+        repo.users()
             .onStart { _state.value = ResourceState.Loading }
             .catch {
                 _state.value = ResourceState.Error(it.message ?: "Unknown Error")
@@ -51,10 +56,7 @@ class UserViewModel(application: Application): AndroidViewModel(application){
 
     private fun refresh() = viewModelScope.launch {
         runCatching {
-            val dtos = api.getUsers()
-            val models = dtos.map(mapper::dtoToModel)
-            dao.clear()
-            dao.insertAll(models)
+            repo.refresh()
         }.onSuccess {
             _event.emit(UiEvent.RefreshComplete)
         }.onFailure {
