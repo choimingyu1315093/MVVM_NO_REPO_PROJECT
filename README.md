@@ -9,7 +9,7 @@ API 링크 :
 
 1)@Volatile private val INSTANCE: AppDatabase? = null
 
-Volatile는 앱 전체에서 INSTANCE객체를 하나만 쓰도록 보장
+Volatile는 앱 전체에서 INSTANCE 하나의 객체만 쓰도록 보장
 
 
 2)synchronized는 잠금장치 역할을 한다.
