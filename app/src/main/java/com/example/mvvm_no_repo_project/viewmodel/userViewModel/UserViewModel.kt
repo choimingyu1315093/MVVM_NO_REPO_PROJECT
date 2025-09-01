@@ -2,6 +2,7 @@ package com.example.mvvm_no_repo_project.viewmodel.userViewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mvvm_no_repo_project.model.common.ErrorHandler
 import com.example.mvvm_no_repo_project.model.local.AppDatabase
@@ -13,6 +14,7 @@ import com.example.mvvm_no_repo_project.model.user.UserRepository
 import com.example.mvvm_no_repo_project.model.user.UserRepositoryImpl
 import com.example.mvvm_no_repo_project.ui.common.ResourceState
 import com.example.mvvm_no_repo_project.ui.common.UiEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -22,14 +24,10 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserViewModel(application: Application): AndroidViewModel(application){
-    private val repo: UserRepository by lazy {
-        val dao = AppDatabase.getInstance(application).getUserDao()
-        val api = ApiClient.create(UserApiService::class.java)
-        val mapper = UserMapper()
-        UserRepositoryImpl(dao, api, mapper)
-    }
+@HiltViewModel
+class UserViewModel @Inject constructor(private val repo: UserRepository): ViewModel(){
 
     //화면 상태(StateFlow)
     private var _state = MutableStateFlow<ResourceState<List<User>>>(ResourceState.Loading)

@@ -2,6 +2,7 @@ package com.example.mvvm_no_repo_project.viewmodel.animalViewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mvvm_no_repo_project.model.animal.Animal
 import com.example.mvvm_no_repo_project.model.animal.AnimalApiService
@@ -22,14 +23,9 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AnimalViewModel(application: Application): AndroidViewModel(application) {
-    private val repo: AnimalRepository by lazy {
-        val dao = AppDatabase.getInstance(application).getAnimalDao()
-        val api = ApiClient.create(AnimalApiService::class.java)
-        val mapper = AnimalMapper()
-        AnimalRepositoryImpl(api, dao, mapper)
-    }
+class AnimalViewModel @Inject constructor(private val repo: AnimalRepository): ViewModel() {
 
     private var _state = MutableStateFlow<ResourceState<List<Animal>>>(ResourceState.Loading)
     val state: StateFlow<ResourceState<List<Animal>>> = _state

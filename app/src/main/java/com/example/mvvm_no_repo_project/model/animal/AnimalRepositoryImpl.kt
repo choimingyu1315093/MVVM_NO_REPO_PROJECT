@@ -2,8 +2,11 @@ package com.example.mvvm_no_repo_project.model.animal
 
 import com.example.mvvm_no_repo_project.model.common.ErrorHandler
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AnimalRepositoryImpl(
+@Singleton
+class AnimalRepositoryImpl @Inject constructor(
     private val api: AnimalApiService,
     private val dao: AnimalDAO,
     private val mapper: AnimalMapper

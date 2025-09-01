@@ -1,7 +1,6 @@
 package com.example.mvvm_no_repo_project.model.remote
 
 import com.example.mvvm_no_repo_project.utils.NetworkUtil
-import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -15,6 +14,7 @@ object ApiClient {
         .writeTimeout(10, TimeUnit.SECONDS)
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BASIC
+            //실무: DEBUG = BODY / RELEASE = BASIC (or NONE)
         })
         .build()
 
