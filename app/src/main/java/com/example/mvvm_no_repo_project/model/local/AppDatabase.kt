@@ -20,7 +20,7 @@ abstract class AppDatabase: RoomDatabase() {
         @Volatile private var INSTANCE: AppDatabase? = null //@Volatile 앱 전체에서 INSTANCE 객체를 하나만 쓰도록 보장(여러 스레드에서 INSTANCE를 안전하게 읽을 수 있도록 보장함.)
 
         fun getInstance(context: Context): AppDatabase =
-            INSTANCE ?: synchronized(this){ //synchronized는 여러 스레드가 동시에 DB를 만들려고 할 때 딱 한 번만 생성되도록 잠금 처리.
+            INSTANCE ?: synchronized(this){ //synchronized는 잠금 장치
                 INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
