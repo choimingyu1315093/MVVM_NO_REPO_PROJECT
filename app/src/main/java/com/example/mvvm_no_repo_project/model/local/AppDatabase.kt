@@ -17,10 +17,10 @@ abstract class AppDatabase: RoomDatabase() {
 
     companion object {
         //볼레틀
-        @Volatile private var INSTANCE: AppDatabase? = null //@Volatile 앱 전체에서 INSTANCE 객체를 하나만 쓰도록 보장(여러 스레드에서 INSTANCE를 안전하게 읽을 수 있도록 보장함.)
+        @Volatile private var INSTANCE: AppDatabase? = null //@Volatile 앱 전체에서 INSTANCE 하나의 객체만 쓰도록 보장(여러 스레드에서 INSTANCE를 안전하게 읽을 수 있도록 보장함.)
 
         fun getInstance(context: Context): AppDatabase =
-            INSTANCE ?: synchronized(this){ //synchronized는 잠금 장치
+            INSTANCE ?: synchronized(this){ //synchronized는 잠금 장치(잠금 장치 하고 만든다.)
                 INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
