@@ -7,6 +7,20 @@ API 링크 :
 * User : https://mocki.io/v1/7316a8a2-e5fa-462a-9fc0-2478c51429b9
 * Animal : https://mocki.io/v1/27ffd0e4-eb7e-45c6-90fe-f5a2858a0082
 
+
+
+브랜치 설명	
+
+noRepository브랜치 : Repository 없음.
+
+repository브랜치 : Repository 있음.
+
+hilt브랜치 : Repository + Hilt
+
+
+
+코드 설명
+
 1)@Volatile private val INSTANCE: AppDatabase? = null
 
 Volatile는 앱 전체에서 INSTANCE 하나의 객체만 쓰도록 보장
