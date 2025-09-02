@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mvvm_no_repo_project.model.user.User
 import com.example.mvvm_no_repo_project.ui.common.ResourceState
@@ -32,7 +32,7 @@ import com.example.mvvm_no_repo_project.viewmodel.userViewModel.UserViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun UserScreen(navController: NavController, viewModel: UserViewModel = viewModel()){
+fun UserScreen(navController: NavController, viewModel: UserViewModel = hiltViewModel()){
     val state = viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {

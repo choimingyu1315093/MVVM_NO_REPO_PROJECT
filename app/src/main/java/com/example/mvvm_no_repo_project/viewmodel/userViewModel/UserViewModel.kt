@@ -1,17 +1,10 @@
 package com.example.mvvm_no_repo_project.viewmodel.userViewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mvvm_no_repo_project.model.common.ErrorHandler
-import com.example.mvvm_no_repo_project.model.local.AppDatabase
-import com.example.mvvm_no_repo_project.model.remote.ApiClient
 import com.example.mvvm_no_repo_project.model.user.User
-import com.example.mvvm_no_repo_project.model.user.UserApiService
-import com.example.mvvm_no_repo_project.model.user.UserMapper
 import com.example.mvvm_no_repo_project.model.user.UserRepository
-import com.example.mvvm_no_repo_project.model.user.UserRepositoryImpl
 import com.example.mvvm_no_repo_project.ui.common.ResourceState
 import com.example.mvvm_no_repo_project.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

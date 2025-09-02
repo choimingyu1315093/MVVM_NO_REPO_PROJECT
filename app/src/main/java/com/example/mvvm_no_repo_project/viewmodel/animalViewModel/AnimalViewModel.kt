@@ -14,6 +14,7 @@ import com.example.mvvm_no_repo_project.model.local.AppDatabase
 import com.example.mvvm_no_repo_project.model.remote.ApiClient
 import com.example.mvvm_no_repo_project.ui.common.ResourceState
 import com.example.mvvm_no_repo_project.ui.common.UiEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class AnimalViewModel @Inject constructor(private val repo: AnimalRepository): ViewModel() {
 
     private var _state = MutableStateFlow<ResourceState<List<Animal>>>(ResourceState.Loading)

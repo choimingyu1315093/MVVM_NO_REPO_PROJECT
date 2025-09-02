@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.android)
     id ("kotlin-kapt")
-    id ("com.google.dagger.hilt.android") version "2.51.1"
 }
 
 android {
@@ -60,13 +60,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.51.1")
-    kapt("com.google.dagger:hilt-compiler:2.51.1")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
-    // Compose와 Hilt 연동 (hiltViewModel() 사용)
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-
-    //Navigation
+    // Navigation
     implementation("androidx.navigation:navigation-compose:2.9.3")
 
     // Retrofit
