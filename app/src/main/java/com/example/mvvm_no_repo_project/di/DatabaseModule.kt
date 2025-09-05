@@ -17,14 +17,18 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
+    @Volatile private var INSTANCE: AppDatabase? = null
+
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            Constants.DB_NAME
-        ).build()
+        INSTANCE ?: synchronized(this){
+            INSTANCE ?: Room.databaseBuilder(
+                context.applicationContext,
+                AppDatabase::class.java,
+                Constants.DB_NAME
+            ).build().also { INSTANCE = it }
+        }
 
     @Provides
     fun provideUserDao(database: AppDatabase): UserDAO =

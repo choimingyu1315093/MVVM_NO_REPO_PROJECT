@@ -1,17 +1,10 @@
 package com.example.mvvm_no_repo_project.viewmodel.animalViewModel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mvvm_no_repo_project.model.animal.Animal
-import com.example.mvvm_no_repo_project.model.animal.AnimalApiService
-import com.example.mvvm_no_repo_project.model.animal.AnimalMapper
 import com.example.mvvm_no_repo_project.model.animal.AnimalRepository
-import com.example.mvvm_no_repo_project.model.animal.AnimalRepositoryImpl
 import com.example.mvvm_no_repo_project.model.common.ErrorHandler
-import com.example.mvvm_no_repo_project.model.local.AppDatabase
-import com.example.mvvm_no_repo_project.model.remote.ApiClient
 import com.example.mvvm_no_repo_project.ui.common.ResourceState
 import com.example.mvvm_no_repo_project.ui.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
